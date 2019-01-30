@@ -3,13 +3,13 @@
 <br><br><br><br>
 
 # vid2vid
-### [Project](https://tcwang0509.github.io/vid2vid/) |  [YouTube](https://youtu.be/GrP_aOSXt5U) | [Paper](https://tcwang0509.github.io/vid2vid/paper_vid2vid.pdf) | [arXiv](https://arxiv.org/abs/1808.06601)
+### [Project](https://tcwang0509.github.io/vid2vid/) | [YouTube(short)](https://youtu.be/5zlcXTCpQqM) | [YouTube(full)](https://youtu.be/GrP_aOSXt5U) | [arXiv](https://arxiv.org/abs/1808.06601) | [Paper(full)](https://tcwang0509.github.io/vid2vid/paper_vid2vid.pdf)
 
 Pytorch implementation for high-resolution (e.g., 2048x1024) photorealistic video-to-video translation. It can be used for turning semantic label maps into photo-realistic videos, synthesizing people talking from edge maps, or generating human motions from poses. <br><br>
 [Video-to-Video Synthesis](https://tcwang0509.github.io/vid2vid/)  
  [Ting-Chun Wang](https://tcwang0509.github.io/)<sup>1</sup>, [Ming-Yu Liu](http://mingyuliu.net/)<sup>1</sup>, [Jun-Yan Zhu](http://people.csail.mit.edu/junyanz/)<sup>2</sup>, [Guilin Liu](https://liuguilin1225.github.io/)<sup>1</sup>, Andrew Tao<sup>1</sup>, [Jan Kautz](http://jankautz.com/)<sup>1</sup>, [Bryan Catanzaro](http://catanzaro.name/)<sup>1</sup>  
- <sup>1</sup>NVIDIA Corporation, <sup>2</sup>MIT CSAIL
- In arXiv, 2018.  
+ <sup>1</sup>NVIDIA Corporation, <sup>2</sup>MIT CSAIL  
+ In Neural Information Processing Systems (**NeurIPS**) 2018  
 
 ## Video-to-Video Translation
 - Label-to-Streetview Results
@@ -26,7 +26,12 @@ Pytorch implementation for high-resolution (e.g., 2048x1024) photorealistic vide
 
 - Pose-to-Body Results
 <p align='center'>
-  <img src='imgs/pose.gif' width='440'/>
+  <img src='imgs/pose.gif' width='550'/>
+</p>
+
+- Frame Prediction Results
+<p align='center'>
+  <img src='imgs/framePredict.gif' width='550'/>
 </p>
 
 ## Prerequisites
@@ -52,6 +57,8 @@ pip install dlib
 git clone https://github.com/NVIDIA/vid2vid
 cd vid2vid
 ```
+- Docker Image
+If you have difficulty building the repo, a docker image can be found in the `docker` folder.
 
 ### Testing 
 - Please first download example dataset by running `python scripts/download_datasets.py`.
@@ -181,6 +188,7 @@ If you have TensorFlow installed, you can see TensorBoard logs in `./checkpoints
   - `no_first_img`: if not specified, the model will assume the first frame is given and synthesize the successive frames. If specified, the model will also try to synthesize the first frame instead.
   - `fg`: if specified, use the foreground-background separation model as stated in the paper. The foreground labels must be specified by `--fg_labels`.
   - `no_flow`: if specified, do not use flow warping and directly synthesize frames. We found this usually still works reasonably well when the background is static, while saving memory and training time.
+  - `sparse_D`: if specified, only apply temporal discriminator on sparse frames in the sequence. This helps save memory while having little effect on performance.
 - For other flags, please see `options/train_options.py` and `options/base_options.py` for all the training flags; see `options/test_options.py` and `options/base_options.py` for all the test flags.
 
 - Additional flags for edge2face examples:
@@ -192,7 +200,8 @@ If you have TensorFlow installed, you can see TensorBoard logs in `./checkpoints
   - `openpose_only`: use only openpose results as input. Please also remember to change `input_nc` to be 3.
   - `add_face_disc`: add an additional discriminator that only works on the face region.
   - `remove_face_labels`: remove densepose results for face, and add noise to openpose face results, so the network can get more robust to different face shapes. This is important if you plan to do inference on half-body videos (if not, usually this flag is unnecessary).
-  - `random_drop_prob`: the probability to randomly drop each pose segment during training, so the network can get more robust to missing poses at inference time. Default is 0.2.
+  - `random_drop_prob`: the probability to randomly drop each pose segment during training, so the network can get more robust to missing poses at inference time. Default is 0.05.
+  - `basic_point_only`: if specified, only use basic joint keypoints for OpenPose output, without using any hand or face keypoints.
 
 ## Citation
 
@@ -203,7 +212,7 @@ If you find this useful for your research, please cite the following paper.
    author    = {Ting-Chun Wang and Ming-Yu Liu and Jun-Yan Zhu and Guilin Liu
                 and Andrew Tao and Jan Kautz and Bryan Catanzaro},
    title     = {Video-to-Video Synthesis},
-   booktitle = {Advances in Neural Information Processing Systems (NIPS)},   
+   booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},   
    year      = {2018},
 }
 ```
